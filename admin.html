@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>لوحة تحكم إدارة المطعم | مذاق الموصل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Cairo', sans-serif; background-color: #1E293B; color: #F8FAFC; padding-top: 65px; padding-bottom: 30px; }
+
+    /* الهيدر العلوي للوحة التحكم */
+    .admin-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #0F172A; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 100; }
+    .admin-title { font-size: 16px; font-weight: 800; color: #F59E0B; display: flex; align-items: center; gap: 8px; }
+
+    .container { padding: 16px; max-width: 800px; margin: 0 auto; }
+
+    /* التابات */
+    .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; background: #0F172A; padding: 4px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: #94A3B8; font-family: 'Cairo'; font-weight: 700; font-size: 13px; border-radius: 8px; cursor: pointer; }
+    .tab-btn.active { background: #D64C31; color: white; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* بطاقة الطلب */
+    .order-card { background: #334155; border-radius: 16px; padding: 16px; margin-bottom: 14px; border-right: 5px solid #F59E0B; }
+    .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #475569; padding-bottom: 8px; margin-bottom: 10px; }
+    .table-badge { background: #0F172A; color: #38BDF8; font-weight: bold; padding: 4px 10px; border-radius: 8px; font-size: 13px; }
+    .status-pill { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
+    .status-new { background: #FFE4E6; color: #E11D48; }
+    .status-cooking { background: #FEF3C7; color: #D97706; }
+    .status-ready { background: #DCFCE7; color: #16A34A; }
+
+    .order-items { font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
+    .order-notes { background: #1E293B; padding: 8px 12px; border-radius: 8px; font-size: 12px; color: #CBD5E1; margin-bottom: 12px; border-right: 3px solid #38BDF8; }
+
+    .status-actions { display: flex; gap: 8px; }
+    .action-btn { flex: 1; padding: 8px; border: none; border-radius: 8px; font-family: 'Cairo'; font-size: 12px; font-weight: bold; cursor: pointer; color: white; }
+    .btn-cooking { background: #D97706; }
+    .btn-ready { background: #16A34A; }
+    .btn-delete { background: #EF4444; }
+
+    /* نموذج إضافة منتج جديد */
+    .form-card { background: #334155; border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #CBD5E1; }
+    .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #1E293B; color: white; font-family: 'Cairo'; font-size: 13px; outline: none; }
+
+    /* قائمة المنتجات الحالية */
+    .prod-manage-item { background: #334155; padding: 10px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- هيدر اللوحة -->
+  <header class="admin-header">
+    <div class="admin-title">📊 لوحة تحكم مطعم مذاق الموصل</div>
+    <span style="font-size: 11px; color: #94A3B8;">الوضع المباشر 🟢</span>
+  </header>
+
+  <div class="container">
+    <!-- التابات الرئيسية -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" onclick="switchAdminTab('orders', this)">📦 الطلبات الحية</button>
+      <button class="tab-btn" onclick="switchAdminTab('products', this)">🍲 إدارة الأطباق</button>
+      <button class="tab-btn" onclick="switchAdminTab('tables', this)">🪑 إدارة الطاولات</button>
+    </div>
+
+    <!-- Tab 1: الطلبات الحية -->
+    <div id="admin-orders" class="tab-content active">
+      <h3 style="font-size: 14px; margin-bottom: 12px; color: #CBD5E1;">الطلبات الواردة من الطاولات:</h3>
+      <div id="ordersContainer">
+        <!-- تجريبي لطلب قادم من السلة -->
+        <div class="order-card">
+          <div class="order-header">
+            <span class="table-badge">🪑 طاولة رقم 8</span>
+            <span class="status-pill status-new">طلب جديد 🟡</span>
+          </div>
+          <div class="order-items">
+            • كباب نفر (كامل) × 2 - 24,000 د.ع<br>
+            • شربت زبيب موصلي × 2 - 6,000 د.ع
+          </div>
+          <div class="order-notes">
+            📝 <b>ملاحظة:</b> بدون بصل، خبز حار زيادة.
+          </div>
+          <div style="font-weight: bold; color: #F59E0B; margin-bottom: 10px; font-size: 14px;">
+            الإجمالي: 30,000 د.ع
+          </div>
+          <div class="status-actions">
+            <button class="action-btn btn-cooking" onclick="updateStatus(this, 'cooking')">بدء التحضير 👨‍🍳</button>
+            <button class="action-btn btn-ready" onclick="updateStatus(this, 'ready')">الطلب جاهز ✅</button>
+            <button class="action-btn btn-delete" onclick="this.closest('.order-card').remove()">إنهاء</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: إدارة الأطباق والأسعار -->
+    <div id="admin-products" class="tab-content">
+      <div class="form-card">
+        <h4 style="font-size: 13px; margin-bottom: 10px; color: #F59E0B;">➕ إضافة طبق جديد للمنيو</h4>
+        <div class="form-group">
+          <label>اسم الطبق:</label>
+          <input type="text" id="newProdName" class="form-control" placeholder="مثال: قوزي على تمن">
+        </div>
+        <div class="form-group">
+          <label>السعر (بالدينار):</label>
+          <input type="number" id="newProdPrice" class="form-control" placeholder="18000">
+        </div>
+        <div class="form-group">
+          <label>القسم:</label>
+          <select id="newProdCat" class="form-control">
+            <option value="mosul">الأكلات الموصلية</option>
+            <option value="grill">المشويات</option>
+            <option value="bakery">المعجنات والبيتزا</option>
+            <option value="sweets">الحلويات</option>
+            <option value="drink">المشروبات</option>
+          </select>
+        </div>
+        <button class="action-btn btn-ready" style="width: 100%; padding: 10px;" onclick="addNewProduct()">حفظ وإضافة للمنيو</button>
+      </div>
+
+      <h4 style="font-size: 13px; margin-bottom: 10px;">الأطباق الموجودة حالياً:</h4>
+      <div id="adminProdList"></div>
+    </div>
+
+    <!-- Tab 3: إدارة الطاولات -->
+    <div id="admin-tables" class="tab-content">
+      <h4 style="font-size: 13px; margin-bottom: 10px;">حالة طاولات الصالة (30 طاولة):</h4>
+      <p style="font-size: 11px; color: #94A3B8; margin-bottom: 12px;">يمكنك تعطيل أي طاولة مؤقتاً عند إجراء الصيانة أو الحجز الخاص.</p>
+      <div id="adminTablesGrid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;"></div>
+    </div>
+  </div>
+
+  <script>
+    function switchAdminTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(`admin-${tabId}`).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function updateStatus(btn, status) {
+      const card = btn.closest('.order-card');
+      const pill = card.querySelector('.status-pill');
+      if (status === 'cooking') {
+        pill.className = 'status-pill status-cooking';
+        pill.innerText = 'قيد التحضير 🟠';
+      } else if (status === 'ready') {
+        pill.className = 'status-pill status-ready';
+        pill.innerText = 'جاهز للتقديم 🟢';
+      }
+    }
+
+    function addNewProduct() {
+      const name = document.getElementById('newProdName').value;
+      const price = document.getElementById('newProdPrice').value;
+      if (!name || !price) return alert('يرجى ملء الاسم والسعر!');
+
+      alert(`✅ تم إضافة "${name}" بسعر ${parseInt(price).toLocaleString()} د.ع إلى المنيو بنجاح!`);
+      document.getElementById('newProdName').value = '';
+      document.getElementById('newProdPrice').value = '';
+    }
+
+    // عرض شبكة إدارة الطاولات
+    const tGrid = document.getElementById('adminTablesGrid');
+    for (let i = 1; i <= 30; i++) {
+      tGrid.innerHTML += `
+        <div style="background:#0F172A; padding:8px; border-radius:8px; text-align:center; font-size:12px; font-weight:bold;">
+          طاولة ${i}<br>
+          <small style="color:#16A34A; font-size:9px;">متاحة 🟢</small>
+        </div>`;
+    }
+  </script>
+</body>
+</html>
 
