@@ -11,11 +11,6 @@
     .admin-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #0F172A; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 100; }
     .admin-title { font-size: 15px; font-weight: 800; color: #F59E0B; }
     .container { padding: 16px; max-width: 800px; margin: 0 auto; }
-    .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; background: #0F172A; padding: 4px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: #94A3B8; font-family: 'Cairo'; font-weight: 700; font-size: 12px; border-radius: 8px; cursor: pointer; text-align: center; }
-    .tab-btn.active { background: #D64C31; color: white; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
     .form-card { background: #334155; border-radius: 16px; padding: 16px; margin-bottom: 20px; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #CBD5E1; }
@@ -28,46 +23,40 @@
 <body>
 
   <header class="admin-header">
-    <div class="admin-title">☁️ لوحة التحكم السحابية - مذاق الموصل</div>
+    <div class="admin-title">☁️ لوحة التحكم - مذاق الموصل</div>
     <span id="cloudStatus" style="font-size: 11px; color: #22C55E;">● متصل بالسحابة</span>
   </header>
 
   <div class="container">
-    <div class="admin-tabs">
-      <button class="tab-btn active">🍲 الأطباق والمنتجات</button>
-    </div>
-
-    <div id="admin-products" class="tab-content active">
-      <div class="form-card">
-        <h4 style="font-size: 14px; margin-bottom: 10px; color: #F59E0B;">➕ إضافة طبق جديد لقاعدة البيانات السحابية</h4>
-        <div class="form-group">
-          <label>اسم الطبق:</label>
-          <input type="text" id="prodName" class="form-control" placeholder="مثال: كباب موصلي">
-        </div>
-        <div class="form-group">
-          <label>السعر (دينار):</label>
-          <input type="number" id="prodPrice" class="form-control" placeholder="12000">
-        </div>
-        <div class="form-group">
-          <label>رابط الصورة (URL):</label>
-          <input type="text" id="prodImg" class="form-control" placeholder="ضع رابط الصورة هنا">
-        </div>
-        <div class="form-group">
-          <label>القسم:</label>
-          <select id="prodCat" class="form-control">
-            <option value="الأكلات الموصلية">الأكلات الموصلية</option>
-            <option value="المشويات">المشويات</option>
-            <option value="المعجنات والبيتزا">المعجنات والبيتزا</option>
-            <option value="الحلويات">الحلويات</option>
-            <option value="المشروبات">المشروبات</option>
-          </select>
-        </div>
-        <button class="action-btn" onclick="saveProductToCloud()">حفظ وإضافة فورية للمنيو ☁️</button>
+    <div class="form-card">
+      <h4 style="font-size: 14px; margin-bottom: 10px; color: #F59E0B;">➕ إضافة منتج جديد للمنيو</h4>
+      <div class="form-group">
+        <label>اسم المنتج:</label>
+        <input type="text" id="prodName" class="form-control" placeholder="مثال: كباب موصلي">
       </div>
-
-      <h4 style="font-size: 14px; margin-bottom: 10px; color: #CBD5E1;">الأطباق المضافة في السحابة:</h4>
-      <div id="cloudProductsList">جاري تحميل البيانات...</div>
+      <div class="form-group">
+        <label>السعر (دينار):</label>
+        <input type="number" id="prodPrice" class="form-control" placeholder="12000">
+      </div>
+      <div class="form-group">
+        <label>رابط الصورة (اختياري):</label>
+        <input type="text" id="prodImg" class="form-control" placeholder="ضع رابط الصورة هنا">
+      </div>
+      <div class="form-group">
+        <label>القسم:</label>
+        <select id="prodCat" class="form-control">
+          <option value="اكلات الموصلية">اكلات الموصلية</option>
+          <option value="المشويات">المشويات</option>
+          <option value="المعجنات والبيتزا">المعجنات والبيتزا</option>
+          <option value="الحلويات">الحلويات</option>
+          <option value="المشروبات والعصائر">المشروبات والعصائر</option>
+        </select>
+      </div>
+      <button class="action-btn" onclick="saveProductToCloud()">حفظ وإضافة فورية للمنيو ☁️</button>
     </div>
+
+    <h4 style="font-size: 14px; margin-bottom: 10px; color: #CBD5E1;">المنتجات المضافة حالياً:</h4>
+    <div id="cloudProductsList">جاري التحميل...</div>
   </div>
 
   <script type="module">
@@ -92,17 +81,17 @@
       const img = document.getElementById('prodImg').value;
       const cat = document.getElementById('prodCat').value;
 
-      if (!name || !price) return alert('يرجى ملء الاسم والسعر!');
+      if (!name || !price) return alert('يرجى كتابة الاسم والسعر!');
 
       try {
         await addDoc(collection(db, "menu_items"), {
           name: name,
           price: price,
-          img: img || 'https://via.placeholder.com/150',
+          img: img || '',
           category: cat,
           createdAt: new Date()
         });
-        alert('✅ تم حفظ المنتج في السحابة وظهر فوراً للزبائن!');
+        alert('✅ تم حفظ المنتج وسيظهر فوراً في المنيو!');
         document.getElementById('prodName').value = '';
         document.getElementById('prodPrice').value = '';
         document.getElementById('prodImg').value = '';
@@ -118,7 +107,7 @@
       const querySnapshot = await getDocs(collection(db, "menu_items"));
       listDiv.innerHTML = '';
       if(querySnapshot.empty) {
-        listDiv.innerHTML = '<p style="color:#94A3B8; font-size:12px;">لا توجد أطباق مضافة حتى الآن.</p>';
+        listDiv.innerHTML = '<p style="color:#94A3B8; font-size:12px;">لا توجد منتجات مضافة.</p>';
         return;
       }
       querySnapshot.forEach((docSnapshot) => {
@@ -127,7 +116,7 @@
           <div class="item-card">
             <div>
               <b>${item.name}</b> - ${item.price} د.ع <br>
-              <small style="color: #94A3B8;">القسم: ${item.category}</small>
+              <small style="color: #F59E0B;">القسم: ${item.category}</small>
             </div>
             <button class="btn-delete-item" onclick="deleteProductFromCloud('${docSnapshot.id}')">حذف 🗑️</button>
           </div>
@@ -136,7 +125,7 @@
     };
 
     window.deleteProductFromCloud = async function(id) {
-      if(confirm('هل انت متاكد من حذف هذا الطبق نهائياً؟')) {
+      if(confirm('هل تريد حذف هذا المنتج؟')) {
         await deleteDoc(doc(db, "menu_items", id));
         loadCloudProducts();
       }
