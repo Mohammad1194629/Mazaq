@@ -107,7 +107,7 @@
         </div>
         <div class="form-group">
           <label>رابط الصورة (URL):</label>
-          <input type="text" id="newProdImg" class="form-control" placeholder="انسخ رابط صورة من الإنترنت وضعه هنا">
+          <input type="text" id="newProdImg" class="form-control" placeholder="ضع رابط صورة المنتج هنا">
         </div>
         <div class="form-group">
           <label>القسم:</label>
@@ -123,7 +123,7 @@
       </div>
     </div>
 
-    <!-- 3. السيطرة على الطاولات (متاح / مشغول / صيانة) -->
+    <!-- 3. السيطرة على الطاولات -->
     <div id="admin-tables" class="tab-content">
       <h3 style="font-size: 14px; margin-bottom: 8px;">إدارة وحالة الطاولات (1 إلى 30):</h3>
       <p style="font-size: 11px; color: #94A3B8; margin-bottom: 14px;">اضغط على أي طاولة لتغيير حالتها فوراً (متاحة 🟢 ➔ مشغولة 🔴 ➔ صيانة 🟡).</p>
@@ -154,7 +154,6 @@
     function addNewProduct() {
       const name = document.getElementById('newProdName').value;
       const price = document.getElementById('newProdPrice').value;
-      const img = document.getElementById('newProdImg').value;
       if (!name || !price) return alert('يرجى ملء اسم الطبق والسعر على الأقل!');
 
       alert(`✅ تم إضافة الطبق "${name}" بنجاح مع الصورة وتم ربطه بالمنيو!`);
@@ -163,7 +162,6 @@
       document.getElementById('newProdImg').value = '';
     }
 
-    // توليد الطاولات مع خاصية التغيير التفاعلي لحالتها
     const tGrid = document.getElementById('adminTablesGrid');
     for (let i = 1; i <= 30; i++) {
       tGrid.innerHTML += `
@@ -179,7 +177,6 @@
       
       if (card.classList.contains('available')) {
         card.className = 'table-ctrl-card busy';
-        text.className = 'status-busy';
         text.style.color = '#EF4444';
         text.innerText = 'مشغولة 🔴';
       } else if (card.classList.contains('busy')) {
