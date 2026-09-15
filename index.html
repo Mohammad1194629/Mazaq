@@ -8,12 +8,15 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Cairo', sans-serif; background-color: #F4F1EA; color: #2B3A2C; padding-top: 60px; padding-bottom: 90px; overflow-x: hidden; }
+    
     .app-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(244, 241, 234, 0.98); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     .brand { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 900; color: #2B3A2C; }
     .cart-btn-head { position: relative; cursor: pointer; font-size: 22px; }
     .cart-badge { position: absolute; top: -5px; right: -8px; background: #D64C31; color: white; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+
     .page { display: none; padding: 16px; }
     .page.active { display: block; }
+
     .hero { position: relative; width: 100%; height: 190px; border-radius: 20px; overflow: hidden; margin-bottom: 16px; background: #2B3A2C; }
     .hero img { width: 100%; height: 100%; object-fit: cover; }
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: white; }
@@ -21,11 +24,13 @@
     .btn-secondary { background: white; color: #2B3A2C; border: 1px solid #ccc; padding: 12px; border-radius: 16px; width: 100%; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
     .info-card { background: white; padding: 12px; border-radius: 14px; font-size: 12px; border: 1px solid rgba(0,0,0,0.04); }
+
     .search-box { width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid #ddd; background: white; font-family: 'Cairo'; font-size: 13px; margin-bottom: 12px; outline: none; }
     .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; }
     .categories::-webkit-scrollbar { display: none; }
     .cat-btn { flex: 0 0 auto; padding: 8px 16px; background: white; border-radius: 20px; font-size: 13px; font-weight: 700; color: #666; border: 1px solid #ddd; cursor: pointer; }
     .cat-btn.active { background: #D64C31; color: white; border-color: #D64C31; }
+
     .product-card { background: white; border-radius: 16px; padding: 12px; display: flex; gap: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
     .img-wrapper { width: 95px; height: 95px; border-radius: 12px; overflow: hidden; background: #EAE4D8; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; }
     .product-img { width: 100%; height: 100%; object-fit: cover; }
@@ -33,14 +38,19 @@
     .fav-btn { position: absolute; top: 10px; left: 10px; background: none; border: none; font-size: 18px; cursor: pointer; }
     .tags-row { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
     .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; background: #F4F1EA; color: #555; }
+    
     .size-chips { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
     .size-chip { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; background: #F4F1EA; color: #555; border: 1px solid #ddd; cursor: pointer; }
     .size-chip.active { background: #2B3A2C; color: white; border-color: #2B3A2C; }
+
     .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+    
     .qty-card-ctrl { display: flex; align-items: center; gap: 6px; background: #D64C31; border-radius: 10px; padding: 2px 6px; color: white; }
     .qty-card-btn { background: none; border: none; color: white; font-size: 16px; font-weight: bold; width: 24px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .qty-card-num { font-size: 13px; font-weight: 800; min-width: 16px; text-align: center; }
+
     .add-btn { width: 32px; height: 32px; background: #D64C31; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
+
     .cart-item { background: white; padding: 12px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .qty-ctrl { display: flex; gap: 8px; align-items: center; background: #F4F1EA; padding: 4px 8px; border-radius: 8px; }
     .qty-ctrl button { border: none; background: none; font-size: 16px; font-weight: bold; color: #2B3A2C; cursor: pointer; width: 20px; }
@@ -49,27 +59,35 @@
     .tbl-btn { background: white; border: 1px solid #ccc; height: 38px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
     .tbl-btn.active { background: #2B3A2C; color: white; border-color: #2B3A2C; }
     .alert-box { background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; display: none; margin-bottom: 10px; text-align: center; }
+
+    .table-info-banner { background: #2B3A2C; color: white; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-bottom: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
     .cart-floating-bar { position: fixed; bottom: 65px; left: 16px; right: 16px; background: #2B3A2C; color: white; padding: 10px 16px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; z-index: 99; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
     .cart-floating-bar.show { transform: translateY(0); }
     .cart-float-btn { background: #D64C31; color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; font-size: 12px; }
+
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 100; }
     .nav-btn { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 11px; text-decoration: none; border: none; background: none; flex: 1; cursor: pointer; }
     .nav-btn.active { color: #D64C31; font-weight: bold; }
   </style>
 </head>
 <body>
+
   <header class="app-header">
     <div class="brand">🍲 مطعم مذاق الموصل</div>
     <div class="cart-btn-head" onclick="switchPage('cart')">
       🛒 <span class="cart-badge" id="cartBadge">0</span>
     </div>
   </header>
+
   <div class="cart-floating-bar" id="cartFloatBar">
     <div style="font-size: 12px;">
       🛒 <b><span id="floatCount">0</span> أطباق</b> | <span id="floatTotal" style="color:#F3E5AB; font-weight:bold;">0</span> د.ع
     </div>
     <button class="cart-float-btn" onclick="switchPage('cart')">عرض السلة ➔</button>
   </div>
+
+  <!-- 1. الرئيسية -->
   <div id="page-home" class="page active">
     <div class="hero">
       <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80" alt="أكلات موصلية">
@@ -78,8 +96,10 @@
         <p style="font-size: 12px;">أشهى الأكلات الموصلية والمشاوي على الفحم</p>
       </div>
     </div>
+    
     <button class="btn-main" onclick="switchPage('menu')">⚡ ابدأ الطلب الآن</button>
     <button class="btn-secondary" onclick="switchPage('menu')">📸 استعرض صور المنيو</button>
+
     <div class="info-grid">
       <div class="info-card"><b>📍 الموقع:</b><br>شارع فلسطين، بغداد</div>
       <div class="info-card"><b>⏰ العمل:</b><br>11:00 ص - 1:00 م</div>
@@ -87,8 +107,11 @@
       <div class="info-card"><b>⭐ التقييم:</b><br>4.9 ممتاز (100+ تقييم)</div>
     </div>
   </div>
+
+  <!-- 2. المنيو -->
   <div id="page-menu" class="page">
     <input type="text" class="search-box" id="searchInput" placeholder="🔍 ابحث عن طبق أو مشروب..." oninput="searchProducts()">
+    
     <div class="categories">
       <button class="cat-btn active" onclick="filterCat('all', this)">الكل</button>
       <button class="cat-btn" onclick="filterCat('mosul', this)">الأكلات الموصلية</button>
@@ -97,31 +120,44 @@
       <button class="cat-btn" onclick="filterCat('sweets', this)">الحلويات</button>
       <button class="cat-btn" onclick="filterCat('drink', this)">المشروبات والعصائر</button>
     </div>
+
     <div id="productsList"></div>
   </div>
+
+  <!-- 3. المفضلة -->
   <div id="page-fav" class="page">
     <h3 style="font-size:15px; margin-bottom:10px;">أطباقي المفضلة ❤️</h3>
     <div id="favList"></div>
   </div>
+
+  <!-- 4. السلة واختيار الطاولة -->
   <div id="page-cart" class="page">
     <h3 style="font-size:15px; margin-bottom:10px;">سلة الطلبات 🛒</h3>
     <div id="cartList"></div>
+
     <h4 style="font-size:13px; margin-top:10px;">ملاحظات خاصة على الطلب:</h4>
     <textarea id="orderNotes" class="notes-input" placeholder="مثال: بدون بصل، زيادة ثوم، خبز إضافي..."></textarea>
-    <h4 style="font-size:13px; margin: 10px 0 5px;">اختر رقم الطاولة <span style="color:red">*</span></h4>
+
+    <h4 style="font-size:13px; margin: 10px 0 5px;">رقم الطاولة:</h4>
+    <div id="autoTableBanner" class="table-info-banner" style="display:none;"></div>
     <div id="tableAlert" class="alert-box">⚠️ يرجى اختيار رقم الطاولة قبل الإرسال!</div>
     <div class="tables-grid" id="tablesGrid"></div>
+
     <div style="background:white; padding:12px; border-radius:12px; margin:15px 0;">
       <b>المجموع الكلي: <span id="cartTotal" style="color:#D64C31; font-size:16px;">0</span> د.ع</b>
     </div>
+
     <button class="btn-main" style="background:#25D366;" onclick="sendWhatsApp()">💬 إرسال الطلب عبر واتساب</button>
   </div>
+
+  <!-- الشريط السفلي -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="btn-nav-home" onclick="switchPage('home')">🏠<br>الرئيسية</button>
     <button class="nav-btn" id="btn-nav-menu" onclick="switchPage('menu')">📋<br>المنيو</button>
     <button class="nav-btn" id="btn-nav-fav" onclick="switchPage('fav')">❤️<br>المفضلة</button>
     <button class="nav-btn" id="btn-nav-cart" onclick="switchPage('cart')">🛒<br>السلة</button>
   </nav>
+
   <script>
     const PRODUCTS = [
       { id: 1, name: 'كباب نفر', desc: 'كباب عراقي مشوي على الفحم متبل بخلطة موصلية، يقدم مع خبز تنور وطماطم مشوية.', cat: 'grill', img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80', icon: '🍢', time: '15 دقيقة', spicy: 'حار/عادي', person: 'نفر واحد', sizes: [{ label: 'نفر كامل', price: 12000 }, { label: 'نصف نفر', price: 7000 }] },
@@ -140,6 +176,27 @@
     let favorites = [];
     let selectedTable = null;
     let selectedSizes = {};
+
+    function checkAutoTable() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tableParam = urlParams.get('table');
+      if (tableParam) {
+        selectedTable = parseInt(tableParam);
+        const banner = document.getElementById('autoTableBanner');
+        banner.innerText = `📍 أنت الآن في الطاولة رقم (${selectedTable})`;
+        banner.style.display = 'block';
+        document.getElementById('tableAlert').style.display = 'none';
+
+        // تظليل زر الطاولة تلقائياً
+        setTimeout(() => {
+          const btn = document.getElementById(`tbl-btn-${selectedTable}`);
+          if (btn) {
+            document.querySelectorAll('.tbl-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          }
+        }, 300);
+      }
+    }
 
     function renderProducts(items) {
       const container = document.getElementById('productsList');
@@ -315,7 +372,7 @@
 
     const grid = document.getElementById('tablesGrid');
     for (let i = 1; i <= 30; i++) {
-      grid.innerHTML += `<button class="tbl-btn" onclick="selectTable(this, ${i})">${i}</button>`;
+      grid.innerHTML += `<button class="tbl-btn" id="tbl-btn-${i}" onclick="selectTable(this, ${i})">${i}</button>`;
     }
 
     function selectTable(btn, num) {
@@ -343,6 +400,7 @@
       window.open(`https://wa.me/9647700000000?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
+    checkAutoTable();
     renderProducts(PRODUCTS);
   </script>
 </body>
