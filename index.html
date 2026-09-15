@@ -3,405 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>مطعم مذاق الموصل | المنيو التفاعلي</title>
+  <title>مطعم مذاق الموصل | المنيو الإلكتروني</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Cairo', sans-serif; background-color: #F4F1EA; color: #2B3A2C; padding-top: 60px; padding-bottom: 90px; overflow-x: hidden; }
-    
-    .app-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(244, 241, 234, 0.98); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .brand { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 900; color: #2B3A2C; }
-    .cart-btn-head { position: relative; cursor: pointer; font-size: 22px; }
-    .cart-badge { position: absolute; top: -5px; right: -8px; background: #D64C31; color: white; font-size: 11px; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
-
-    .page { display: none; padding: 16px; }
-    .page.active { display: block; }
-
-    .hero { position: relative; width: 100%; height: 190px; border-radius: 20px; overflow: hidden; margin-bottom: 16px; background: #2B3A2C; }
-    .hero img { width: 100%; height: 100%; object-fit: cover; }
-    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85), transparent); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: white; }
-    .btn-main { background: #D64C31; color: white; border: none; padding: 14px; border-radius: 16px; width: 100%; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(214,76,49,0.3); }
-    .btn-secondary { background: white; color: #2B3A2C; border: 1px solid #ccc; padding: 12px; border-radius: 16px; width: 100%; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; }
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    .info-card { background: white; padding: 12px; border-radius: 14px; font-size: 12px; border: 1px solid rgba(0,0,0,0.04); }
-
-    .search-box { width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid #ddd; background: white; font-family: 'Cairo'; font-size: 13px; margin-bottom: 12px; outline: none; }
-    .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 12px; }
-    .categories::-webkit-scrollbar { display: none; }
-    .cat-btn { flex: 0 0 auto; padding: 8px 16px; background: white; border-radius: 20px; font-size: 13px; font-weight: 700; color: #666; border: 1px solid #ddd; cursor: pointer; }
-    .cat-btn.active { background: #D64C31; color: white; border-color: #D64C31; }
-
-    .product-card { background: white; border-radius: 16px; padding: 12px; display: flex; gap: 12px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-    .img-wrapper { width: 95px; height: 95px; border-radius: 12px; overflow: hidden; background: #EAE4D8; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-    .product-img { width: 100%; height: 100%; object-fit: cover; }
-    .product-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .fav-btn { position: absolute; top: 10px; left: 10px; background: none; border: none; font-size: 18px; cursor: pointer; }
-    .tags-row { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
-    .tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; background: #F4F1EA; color: #555; }
-    
-    .size-chips { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-    .size-chip { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; background: #F4F1EA; color: #555; border: 1px solid #ddd; cursor: pointer; }
-    .size-chip.active { background: #2B3A2C; color: white; border-color: #2B3A2C; }
-
-    .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-    
-    .qty-card-ctrl { display: flex; align-items: center; gap: 6px; background: #D64C31; border-radius: 10px; padding: 2px 6px; color: white; }
-    .qty-card-btn { background: none; border: none; color: white; font-size: 16px; font-weight: bold; width: 24px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .qty-card-num { font-size: 13px; font-weight: 800; min-width: 16px; text-align: center; }
-
-    .add-btn { width: 32px; height: 32px; background: #D64C31; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; }
-
-    .cart-item { background: white; padding: 12px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .qty-ctrl { display: flex; gap: 8px; align-items: center; background: #F4F1EA; padding: 4px 8px; border-radius: 8px; }
-    .qty-ctrl button { border: none; background: none; font-size: 16px; font-weight: bold; color: #2B3A2C; cursor: pointer; width: 20px; }
-    .notes-input { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid #ccc; font-family: 'Cairo'; font-size: 12px; margin: 10px 0; outline: none; }
-    .tables-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 10px 0; max-height: 140px; overflow-y: auto; }
-    .tbl-btn { background: white; border: 1px solid #ccc; height: 38px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 13px; }
-    .tbl-btn.active { background: #2B3A2C; color: white; border-color: #2B3A2C; }
-    .alert-box { background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: bold; display: none; margin-bottom: 10px; text-align: center; }
-
-    .table-info-banner { background: #2B3A2C; color: white; padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-bottom: 12px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-
-    .cart-floating-bar { position: fixed; bottom: 65px; left: 16px; right: 16px; background: #2B3A2C; color: white; padding: 10px 16px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; z-index: 99; transform: translateY(150%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-    .cart-floating-bar.show { transform: translateY(0); }
-    .cart-float-btn { background: #D64C31; color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-family: 'Cairo'; cursor: pointer; font-size: 12px; }
-
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #eee; z-index: 100; }
-    .nav-btn { display: flex; flex-direction: column; align-items: center; color: #888; font-size: 11px; text-decoration: none; border: none; background: none; flex: 1; cursor: pointer; }
-    .nav-btn.active { color: #D64C31; font-weight: bold; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Cairo', sans-serif; background-color: #0F172A; color: #F8FAFC; padding-bottom: 80px; }
+    .header { background: #1E293B; padding: 20px; text-align: center; border-bottom: 2px solid #D64C31; }
+    .header h1 { color: #F59E0B; font-size: 22px; margin-bottom: 5px; }
+    .header p { color: #94A3B8; font-size: 13px; }
+    .container { padding: 16px; max-width: 800px; margin: 0 auto; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; margin-top: 20px; }
+    .card { background: #1E293B; border-radius: 12px; overflow: hidden; border: 1px solid #334155; display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 120px; object-fit: cover; }
+    .card-body { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-title { font-size: 14px; font-weight: 700; color: #F8FAFC; margin-bottom: 6px; }
+    .card-category { font-size: 11px; color: #D64C31; margin-bottom: 8px; font-weight: 600; }
+    .card-price { font-size: 13px; font-weight: 800; color: #22C55E; }
+    .loading-spinner { text-align: center; color: #94A3B8; padding: 40px; font-size: 14px; }
   </style>
 </head>
 <body>
 
-  <header class="app-header">
-    <div class="brand">🍲 مطعم مذاق الموصل</div>
-    <div class="cart-btn-head" onclick="switchPage('cart')">
-      🛒 <span class="cart-badge" id="cartBadge">0</span>
-    </div>
+  <header class="header">
+    <h1>🍽️ مطعم مذاق الموصل</h1>
+    <p>أهلاً بكم - تصفح أشهى الأطباق الموصلية والمأكولات الطازجة</p>
   </header>
 
-  <div class="cart-floating-bar" id="cartFloatBar">
-    <div style="font-size: 12px;">
-      🛒 <b><span id="floatCount">0</span> أطباق</b> | <span id="floatTotal" style="color:#F3E5AB; font-weight:bold;">0</span> د.ع
-    </div>
-    <button class="cart-float-btn" onclick="switchPage('cart')">عرض السلة ➔</button>
+  <div class="container">
+    <div id="loading" class="loading-spinner">⏳ جاري تحميل الأطباق...</div>
+    <div id="menuGrid" class="menu-grid"></div>
   </div>
 
-  <!-- 1. الرئيسية -->
-  <div id="page-home" class="page active">
-    <div class="hero">
-      <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80" alt="أكلات موصلية">
-      <div class="hero-overlay">
-        <h2>نكهات أصيلة تحضر يومياً</h2>
-        <p style="font-size: 12px;">أشهى الأكلات الموصلية والمشاوي على الفحم</p>
-      </div>
-    </div>
-    
-    <button class="btn-main" onclick="switchPage('menu')">⚡ ابدأ الطلب الآن</button>
-    <button class="btn-secondary" onclick="switchPage('menu')">📸 استعرض صور المنيو</button>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-    <div class="info-grid">
-      <div class="info-card"><b>📍 الموقع:</b><br>شارع فلسطين، بغداد</div>
-      <div class="info-card"><b>⏰ العمل:</b><br>11:00 ص - 1:00 م</div>
-      <div class="info-card"><b>📞 الهاتف:</b><br>0770 000 0000</div>
-      <div class="info-card"><b>⭐ التقييم:</b><br>4.9 ممتاز (100+ تقييم)</div>
-    </div>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSEuSjIN1P6AxgpXts1yDSxHu4bdaf8xs",
+      authDomain: "mazaq-restaurant-40ed3.firebaseapp.com",
+      projectId: "mazaq-restaurant-40ed3",
+      storageBucket: "mazaq-restaurant-40ed3.firebasestorage.app",
+      messagingSenderId: "751899653905",
+      appId: "1:751899653905:web:0aad8440f5d3eb5e633eb0"
+    };
 
-  <!-- 2. المنيو -->
-  <div id="page-menu" class="page">
-    <input type="text" class="search-box" id="searchInput" placeholder="🔍 ابحث عن طبق أو مشروب..." oninput="searchProducts()">
-    
-    <div class="categories">
-      <button class="cat-btn active" onclick="filterCat('all', this)">الكل</button>
-      <button class="cat-btn" onclick="filterCat('mosul', this)">الأكلات الموصلية</button>
-      <button class="cat-btn" onclick="filterCat('grill', this)">المشويات</button>
-      <button class="cat-btn" onclick="filterCat('bakery', this)">المعجنات والبيتزا</button>
-      <button class="cat-btn" onclick="filterCat('sweets', this)">الحلويات</button>
-      <button class="cat-btn" onclick="filterCat('drink', this)">المشروبات والعصائر</button>
-    </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    <div id="productsList"></div>
-  </div>
+    async function fetchMenuFromCloud() {
+      const menuGrid = document.getElementById('menuGrid');
+      const loading = document.getElementById('loading');
 
-  <!-- 3. المفضلة -->
-  <div id="page-fav" class="page">
-    <h3 style="font-size:15px; margin-bottom:10px;">أطباقي المفضلة ❤️</h3>
-    <div id="favList"></div>
-  </div>
+      try {
+        const querySnapshot = await getDocs(collection(db, "menu_items"));
+        loading.style.display = 'none';
+        menuGrid.innerHTML = '';
 
-  <!-- 4. السلة واختيار الطاولة -->
-  <div id="page-cart" class="page">
-    <h3 style="font-size:15px; margin-bottom:10px;">سلة الطلبات 🛒</h3>
-    <div id="cartList"></div>
-
-    <h4 style="font-size:13px; margin-top:10px;">ملاحظات خاصة على الطلب:</h4>
-    <textarea id="orderNotes" class="notes-input" placeholder="مثال: بدون بصل، زيادة ثوم، خبز إضافي..."></textarea>
-
-    <h4 style="font-size:13px; margin: 10px 0 5px;">رقم الطاولة:</h4>
-    <div id="autoTableBanner" class="table-info-banner" style="display:none;"></div>
-    <div id="tableAlert" class="alert-box">⚠️ يرجى اختيار رقم الطاولة قبل الإرسال!</div>
-    <div class="tables-grid" id="tablesGrid"></div>
-
-    <div style="background:white; padding:12px; border-radius:12px; margin:15px 0;">
-      <b>المجموع الكلي: <span id="cartTotal" style="color:#D64C31; font-size:16px;">0</span> د.ع</b>
-    </div>
-
-    <button class="btn-main" style="background:#25D366;" onclick="sendWhatsApp()">💬 إرسال الطلب عبر واتساب</button>
-  </div>
-
-  <!-- الشريط السفلي -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="btn-nav-home" onclick="switchPage('home')">🏠<br>الرئيسية</button>
-    <button class="nav-btn" id="btn-nav-menu" onclick="switchPage('menu')">📋<br>المنيو</button>
-    <button class="nav-btn" id="btn-nav-fav" onclick="switchPage('fav')">❤️<br>المفضلة</button>
-    <button class="nav-btn" id="btn-nav-cart" onclick="switchPage('cart')">🛒<br>السلة</button>
-  </nav>
-
-  <script>
-    const PRODUCTS = [
-      { id: 1, name: 'كباب نفر', desc: 'كباب عراقي مشوي على الفحم متبل بخلطة موصلية، يقدم مع خبز تنور وطماطم مشوية.', cat: 'grill', img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80', icon: '🍢', time: '15 دقيقة', spicy: 'حار/عادي', person: 'نفر واحد', sizes: [{ label: 'نفر كامل', price: 12000 }, { label: 'نصف نفر', price: 7000 }] },
-      { id: 2, name: 'تكّة لحم غنم', desc: 'قطع لحم غنم طرية متبلة بالليمون والتوابل ومشوية على الفحم.', cat: 'grill', img: 'https://images.unsplash.com/photo-1544025162-831e5fc23f66?auto=format&fit=crop&w=400&q=80', icon: '🥩', time: '20 دقيقة', spicy: 'حسب الطلب', person: 'نفر واحد', sizes: [{ label: 'نفر كامل', price: 14000 }, { label: 'نصف نفر', price: 8000 }] },
-      { id: 3, name: 'كبة موصلية بالمرگة', desc: 'كبة برغل بحجم كبير محشوة باللحم المفروم والمكسرات مع مرقة طماطم.', cat: 'mosul', img: 'https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=400&q=80', icon: '🍲', time: '20 دقيقة', spicy: 'عادي', person: 'شخصين', sizes: [{ label: 'وجبة كاملة', price: 16000 }] },
-      { id: 4, name: 'دولمة موصلية', desc: 'ورق عنب وبصل وباذنجان محشو باللحم والأرز ومطبوخ على نار هادئة.', cat: 'mosul', img: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=400&q=80', icon: '🥬', time: '25 دقيقة', spicy: 'معتدل', person: 'نفر واحد', sizes: [{ label: 'وجبة كاملة', price: 15000 }] },
-      { id: 5, name: 'سمك مسكوف', desc: 'سمك كارب طازج مشوي على الحطب بأسلوب عراقي تقليدي.', cat: 'grill', img: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=400&q=80', icon: '🐟', time: '45 دقيقة', spicy: 'عادي', person: '3-4 أشخاص', sizes: [{ label: 'سمكة كاملة', price: 35000 }] },
-      { id: 6, name: 'باچة موصلية', desc: 'باچة لحم غنم مطبوخة ببطء مع التوابل العراقية والخبز المغموس.', cat: 'mosul', img: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=400&q=80', icon: '🥘', time: '20 دقيقة', spicy: 'عادي', person: 'شخصين', sizes: [{ label: 'وجبة باچة', price: 22000 }] },
-      { id: 7, name: 'تمن مع لحم (قوزي)', desc: 'فخذ لحم مطبوخ ببطء يقدم فوق أرز بسمتي مع الزبيب واللوز.', cat: 'mosul', img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80', icon: '🍛', time: '15 دقيقة', spicy: 'عادي', person: 'نفر واحد', sizes: [{ label: 'لحم غنم', price: 18000 }, { label: 'دجاج', price: 12000 }] },
-      { id: 8, name: 'بيتزا الزيتون الخاصة', desc: 'عجينة رقيقة محشوة باللحم المفروم والجبن والخضروات.', cat: 'bakery', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80', icon: '🍕', time: '20 دقيقة', spicy: 'عادي', person: 'حسب الحجم', sizes: [{ label: 'صغير', price: 8000 }, { label: 'متوسط', price: 12000 }, { label: 'كبير', price: 16000 }] },
-      { id: 9, name: 'بقلاوة موصلية', desc: 'طبقات عجين مقرمشة محشوة بالفستق الحلبي والقطر.', cat: 'sweets', img: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?auto=format&fit=crop&w=400&q=80', icon: '🥮', time: 'جاهز', spicy: 'حلو', person: 'شخصين', sizes: [{ label: 'صحن صغير', price: 8000 }, { label: 'صحن كبير', price: 15000 }] },
-      { id: 10, name: 'شربت زبيب موصلي', desc: 'شراب الزبيب الطبيعي والبارد مع الثلج.', cat: 'drink', img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=400&q=80', icon: '🥤', time: 'جاهز', spicy: 'بارد', person: 'شخص واحد', sizes: [{ label: 'كأس بارد', price: 3000 }] }
-    ];
-
-    let cart = [];
-    let favorites = [];
-    let selectedTable = null;
-    let selectedSizes = {};
-
-    function checkAutoTable() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tableParam = urlParams.get('table');
-      if (tableParam) {
-        selectedTable = parseInt(tableParam);
-        const banner = document.getElementById('autoTableBanner');
-        banner.innerText = `📍 أنت الآن في الطاولة رقم (${selectedTable})`;
-        banner.style.display = 'block';
-        document.getElementById('tableAlert').style.display = 'none';
-
-        // تظليل زر الطاولة تلقائياً
-        setTimeout(() => {
-          const btn = document.getElementById(`tbl-btn-${selectedTable}`);
-          if (btn) {
-            document.querySelectorAll('.tbl-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-          }
-        }, 300);
-      }
-    }
-
-    function renderProducts(items) {
-      const container = document.getElementById('productsList');
-      container.innerHTML = '';
-      if(items.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#777; margin-top:20px;">لم يتم العثور على أطباق.</p>';
-        return;
-      }
-
-      items.forEach(p => {
-        const isFav = favorites.includes(p.id);
-        if (!selectedSizes[p.id]) { selectedSizes[p.id] = p.sizes[0]; }
-        const activeSize = selectedSizes[p.id];
-
-        let sizeChipsHTML = '';
-        if (p.sizes && p.sizes.length > 1) {
-          sizeChipsHTML = `<div class="size-chips">
-            ${p.sizes.map(s => `
-              <button class="size-chip ${s.label === activeSize.label ? 'active' : ''}" 
-                      onclick="selectSize(${p.id}, '${s.label}', ${s.price})">
-                ${s.label}
-              </button>
-            `).join('')}
-          </div>`;
+        if (querySnapshot.empty) {
+          menuGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#94A3B8;">لا توجد أطباق معروضة حالياً.</p>';
+          return;
         }
 
-        const fullCartItemName = p.sizes.length > 1 ? `${p.name} (${activeSize.label})` : p.name;
-        const cartItem = cart.find(i => i.name === fullCartItemName);
-        const itemQty = cartItem ? cartItem.qty : 0;
-
-        let actionBtnHTML = '';
-        if (itemQty > 0) {
-          actionBtnHTML = `
-            <div class="qty-card-ctrl">
-              <button class="qty-card-btn" onclick="updateCartQty('${fullCartItemName}', -1)">-</button>
-              <span class="qty-card-num">${itemQty}</span>
-              <button class="qty-card-btn" onclick="updateCartQty('${fullCartItemName}', 1)">+</button>
-            </div>`;
-        } else {
-          actionBtnHTML = `<button class="add-btn" onclick="updateCartQty('${fullCartItemName}', 1, ${activeSize.price})">+</button>`;
-        }
-
-        container.innerHTML += `
-          <div class="product-card">
-            <button class="fav-btn" onclick="toggleFav(${p.id})">${isFav ? '❤️' : '🤍'}</button>
-            <div class="img-wrapper">
-              <img src="${p.img}" class="product-img" alt="${p.name}" onerror="this.onerror=null; this.parentNode.innerHTML='${p.icon}';">
-            </div>
-            <div class="product-info">
-              <div>
-                <h4 style="font-size:14px; color:#2B3A2C;">${p.name}</h4>
-                <p style="font-size:11px; color:#666; line-height:1.3;">${p.desc}</p>
-                <div class="tags-row">
-                  <span class="tag">⏱️ ${p.time}</span>
-                  <span class="tag">👤 ${p.person}</span>
-                  <span class="tag">🌶️ ${p.spicy}</span>
+        querySnapshot.forEach((doc) => {
+          const item = doc.data();
+          menuGrid.innerHTML += `
+            <div class="card">
+              <img src="${item.img || 'https://via.placeholder.com/150'}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150'">
+              <div class="card-body">
+                <div>
+                  <div class="card-category">${item.category || 'عام'}</div>
+                  <div class="card-title">${item.name}</div>
                 </div>
-                ${sizeChipsHTML}
-              </div>
-              <div class="price-row">
-                <b style="color:#D64C31; font-size:14px;">${activeSize.price.toLocaleString()} د.ع</b>
-                ${actionBtnHTML}
+                <div class="card-price">${item.price} د.ع</div>
               </div>
             </div>
-          </div>`;
-      });
-    }
-
-    function selectSize(productId, sizeLabel, sizePrice) {
-      selectedSizes[productId] = { label: sizeLabel, price: sizePrice };
-      renderProducts(PRODUCTS);
-    }
-
-    function updateCartQty(itemName, change, price = 0) {
-      const foundIndex = cart.findIndex(i => i.name === itemName);
-      if (foundIndex > -1) {
-        cart[foundIndex].qty += change;
-        if (cart[foundIndex].qty <= 0) { cart.splice(foundIndex, 1); }
-      } else if (change > 0) {
-        cart.push({ name: itemName, price: price, qty: 1 });
-      }
-      updateCartUI();
-      renderProducts(PRODUCTS);
-    }
-
-    function filterCat(cat, btn) {
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      if (cat === 'all') { renderProducts(PRODUCTS); }
-      else { renderProducts(PRODUCTS.filter(p => p.cat === cat)); }
-    }
-
-    function searchProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      renderProducts(PRODUCTS.filter(p => p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query)));
-    }
-
-    function toggleFav(id) {
-      if (favorites.includes(id)) { favorites = favorites.filter(f => f !== id); }
-      else { favorites.push(id); }
-      renderProducts(PRODUCTS);
-      renderFavs();
-    }
-
-    function renderFavs() {
-      const favContainer = document.getElementById('favList');
-      const favProducts = PRODUCTS.filter(p => favorites.includes(p.id));
-      if (favProducts.length === 0) {
-        favContainer.innerHTML = '<p style="font-size:13px; color:#777;">لا توجد أطباق مفضلة بعد.</p>';
-        return;
-      }
-      favContainer.innerHTML = '';
-      favProducts.forEach(p => {
-        favContainer.innerHTML += `
-          <div class="product-card">
-            <div class="img-wrapper">
-              <img src="${p.img}" class="product-img" alt="${p.name}" onerror="this.onerror=null; this.parentNode.innerHTML='${p.icon}';">
-            </div>
-            <div class="product-info">
-              <h4 style="font-size:14px;">${p.name}</h4>
-              <b style="color:#D64C31;">${p.sizes[0].price.toLocaleString()} د.ع</b>
-              <button class="add-btn" onclick="updateCartQty('${p.name}', 1, ${p.sizes[0].price})">+</button>
-            </div>
-          </div>`;
-      });
-    }
-
-    function switchPage(pageId) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`page-${pageId}`).classList.add('active');
-      const navBtn = document.getElementById(`btn-nav-${pageId}`);
-      if(navBtn) navBtn.classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    function updateCartUI() {
-      const list = document.getElementById('cartList');
-      const badge = document.getElementById('cartBadge');
-      const totalEl = document.getElementById('cartTotal');
-      const floatBar = document.getElementById('cartFloatBar');
-      const floatCount = document.getElementById('floatCount');
-      const floatTotal = document.getElementById('floatTotal');
-      
-      list.innerHTML = '';
-      let total = 0, count = 0;
-
-      cart.forEach((item) => {
-        total += item.price * item.qty;
-        count += item.qty;
-        list.innerHTML += `
-          <div class="cart-item">
-            <div><b>${item.name}</b><br><small style="color:#D64C31;">${item.price.toLocaleString()} د.ع</small></div>
-            <div class="qty-ctrl">
-              <button onclick="updateCartQty('${item.name}', -1)">-</button>
-              <span>${item.qty}</span>
-              <button onclick="updateCartQty('${item.name}', 1)">+</button>
-            </div>
-          </div>`;
-      });
-
-      badge.innerText = count;
-      totalEl.innerText = total.toLocaleString();
-
-      if (count > 0) {
-        floatCount.innerText = count;
-        floatTotal.innerText = total.toLocaleString();
-        floatBar.classList.add('show');
-      } else {
-        floatBar.classList.remove('show');
+          `;
+        });
+      } catch (error) {
+        loading.innerText = 'حدث خطأ في تحميل البيانات من السحابة.';
+        console.error(error);
       }
     }
 
-    const grid = document.getElementById('tablesGrid');
-    for (let i = 1; i <= 30; i++) {
-      grid.innerHTML += `<button class="tbl-btn" id="tbl-btn-${i}" onclick="selectTable(this, ${i})">${i}</button>`;
-    }
-
-    function selectTable(btn, num) {
-      document.querySelectorAll('.tbl-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedTable = num;
-      document.getElementById('tableAlert').style.display = 'none';
-    }
-
-    function sendWhatsApp() {
-      if (cart.length === 0) return alert('السلة فارغة!');
-      if (!selectedTable) {
-        document.getElementById('tableAlert').style.display = 'block';
-        return;
-      }
-      const notes = document.getElementById('orderNotes').value;
-      let msg = `*طلب جديد - مطعم مذاق الموصل* 🍲\n🪑 *رقم الطاولة:* ${selectedTable}\n-------------------\n`;
-      let total = 0;
-      cart.forEach(i => {
-        msg += `▪️ ${i.name} (العدد: ${i.qty}) - ${(i.price * i.qty).toLocaleString()} د.ع\n`;
-        total += i.price * i.qty;
-      });
-      if (notes.trim() !== '') { msg += `-------------------\n📝 *ملاحظات الزبون:* ${notes}\n`; }
-      msg += `-------------------\n💰 *الإجمالي الكلي:* ${total.toLocaleString()} د.ع`;
-      window.open(`https://wa.me/9647700000000?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    checkAutoTable();
-    renderProducts(PRODUCTS);
+    fetchMenuFromCloud();
   </script>
 </body>
 </html>
