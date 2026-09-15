@@ -3,192 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>لوحة تحكم إدارة المطعم | مذاق الموصل</title>
+  <title>لوحة التحكم السحابية | مطعم مذاق الموصل</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Cairo', sans-serif; background-color: #1E293B; color: #F8FAFC; padding-top: 65px; padding-bottom: 30px; }
-
     .admin-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: #0F172A; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items: center; padding: 0 16px; z-index: 100; }
     .admin-title { font-size: 15px; font-weight: 800; color: #F59E0B; }
-
     .container { padding: 16px; max-width: 800px; margin: 0 auto; }
-
     .admin-tabs { display: flex; gap: 8px; margin-bottom: 16px; background: #0F172A; padding: 4px; border-radius: 12px; }
     .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: #94A3B8; font-family: 'Cairo'; font-weight: 700; font-size: 12px; border-radius: 8px; cursor: pointer; text-align: center; }
     .tab-btn.active { background: #D64C31; color: white; }
-
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-
-    .order-card { background: #334155; border-radius: 16px; padding: 16px; margin-bottom: 14px; border-right: 5px solid #F59E0B; }
-    .order-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #475569; padding-bottom: 8px; margin-bottom: 10px; }
-    .table-badge { background: #0F172A; color: #38BDF8; font-weight: bold; padding: 4px 10px; border-radius: 8px; font-size: 13px; }
-    .status-pill { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: bold; }
-    .status-new { background: #FFE4E6; color: #E11D48; }
-    .status-cooking { background: #FEF3C7; color: #D97706; }
-    .status-ready { background: #DCFCE7; color: #16A34A; }
-
-    .order-items { font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
-    .order-notes { background: #1E293B; padding: 8px 12px; border-radius: 8px; font-size: 12px; color: #CBD5E1; margin-bottom: 12px; border-right: 3px solid #38BDF8; }
-
-    .status-actions { display: flex; gap: 8px; }
-    .action-btn { flex: 1; padding: 8px; border: none; border-radius: 8px; font-family: 'Cairo'; font-size: 11px; font-weight: bold; cursor: pointer; color: white; text-align: center; }
-    .btn-cooking { background: #D97706; }
-    .btn-ready { background: #16A34A; }
-    .btn-delete { background: #EF4444; }
-
     .form-card { background: #334155; border-radius: 16px; padding: 16px; margin-bottom: 20px; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #CBD5E1; }
     .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #475569; background: #1E293B; color: white; font-family: 'Cairo'; font-size: 13px; outline: none; }
-
-    /* شبكة الطاولات التفاعلية */
-    .tables-control-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .table-ctrl-card { background: #334155; border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 2px solid #475569; }
-    .table-ctrl-card.available { border-color: #16A34A; }
-    .table-ctrl-card.busy { border-color: #EF4444; background: #475569; }
-    .table-ctrl-card.maintenance { border-color: #F59E0B; }
+    .action-btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-family: 'Cairo'; font-size: 13px; font-weight: bold; cursor: pointer; color: white; background: #16A34A; }
+    .item-card { background: #334155; border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .btn-delete-item { background: #EF4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-family: 'Cairo'; cursor: pointer; font-size: 11px; }
   </style>
 </head>
 <body>
 
   <header class="admin-header">
-    <div class="admin-title">📊 لوحة تحكم مطعم مذاق الموصل</div>
-    <span style="font-size: 11px; color: #22C55E;">● متصل</span>
+    <div class="admin-title">☁️ لوحة التحكم السحابية - مذاق الموصل</div>
+    <span id="cloudStatus" style="font-size: 11px; color: #22C55E;">● متصل بالسحابة</span>
   </header>
 
   <div class="container">
     <div class="admin-tabs">
-      <button class="tab-btn active" onclick="switchAdminTab('orders', this)">📦 الطلبات الحية</button>
-      <button class="tab-btn" onclick="switchAdminTab('products', this)">🍲 إضافة منتج وصورة</button>
-      <button class="tab-btn" onclick="switchAdminTab('tables', this)">🪑 السيطرة على الطاولات</button>
+      <button class="tab-btn active">🍲 الأطباق والمنتجات</button>
     </div>
 
-    <!-- 1. الطلبات الحية -->
-    <div id="admin-orders" class="tab-content active">
-      <h3 style="font-size: 14px; margin-bottom: 12px; color: #CBD5E1;">الطلبات الواردة من الطاولات:</h3>
-      <div id="ordersContainer">
-        <div class="order-card">
-          <div class="order-header">
-            <span class="table-badge">🪑 طاولة رقم 8</span>
-            <span class="status-pill status-new">طلب جديد 🟡</span>
-          </div>
-          <div class="order-items">
-            • كباب نفر (كامل) × 2 - 24,000 د.ع<br>
-            • شربت زبيب موصلي × 2 - 6,000 د.ع
-          </div>
-          <div class="order-notes">
-            📝 <b>ملاحظة:</b> بدون بصل، خبز حار زيادة.
-          </div>
-          <div style="font-weight: bold; color: #F59E0B; margin-bottom: 10px; font-size: 14px;">
-            الإجمالي: 30,000 د.ع
-          </div>
-          <div class="status-actions">
-            <button class="action-btn btn-cooking" onclick="updateStatus(this, 'cooking')">تحضير 🟠</button>
-            <button class="action-btn btn-ready" onclick="updateStatus(this, 'ready')">جاهز ✅</button>
-            <button class="action-btn btn-delete" onclick="this.closest('.order-card').remove()">إنهاء</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. إضافة الأطباق مع رابط الصورة -->
-    <div id="admin-products" class="tab-content">
+    <div id="admin-products" class="tab-content active">
       <div class="form-card">
-        <h4 style="font-size: 13px; margin-bottom: 10px; color: #F59E0B;">➕ إضافة طبق جديد مع صورة</h4>
+        <h4 style="font-size: 14px; margin-bottom: 10px; color: #F59E0B;">➕ إضافة طبق جديد لقاعدة البيانات السحابية</h4>
         <div class="form-group">
           <label>اسم الطبق:</label>
-          <input type="text" id="newProdName" class="form-control" placeholder="مثال: تشريب لحم">
+          <input type="text" id="prodName" class="form-control" placeholder="مثال: كباب موصلي">
         </div>
         <div class="form-group">
-          <label>السعر (بالدينار):</label>
-          <input type="number" id="newProdPrice" class="form-control" placeholder="12000">
+          <label>السعر (دينار):</label>
+          <input type="number" id="prodPrice" class="form-control" placeholder="12000">
         </div>
         <div class="form-group">
           <label>رابط الصورة (URL):</label>
-          <input type="text" id="newProdImg" class="form-control" placeholder="ضع رابط صورة المنتج هنا">
+          <input type="text" id="prodImg" class="form-control" placeholder="ضع رابط الصورة هنا">
         </div>
         <div class="form-group">
           <label>القسم:</label>
-          <select id="newProdCat" class="form-control">
-            <option value="mosul">الأكلات الموصلية</option>
-            <option value="grill">المشويات</option>
-            <option value="bakery">المعجنات والبيتزا</option>
-            <option value="sweets">الحلويات</option>
-            <option value="drink">المشروبات</option>
+          <select id="prodCat" class="form-control">
+            <option value="الأكلات الموصلية">الأكلات الموصلية</option>
+            <option value="المشويات">المشويات</option>
+            <option value="المعجنات والبيتزا">المعجنات والبيتزا</option>
+            <option value="الحلويات">الحلويات</option>
+            <option value="المشروبات">المشروبات</option>
           </select>
         </div>
-        <button class="action-btn btn-ready" style="width: 100%; padding: 12px; font-size: 13px;" onclick="addNewProduct()">حفظ وإضافة للمنيو</button>
+        <button class="action-btn" onclick="saveProductToCloud()">حفظ وإضافة فورية للمنيو ☁️</button>
       </div>
-    </div>
 
-    <!-- 3. السيطرة على الطاولات -->
-    <div id="admin-tables" class="tab-content">
-      <h3 style="font-size: 14px; margin-bottom: 8px;">إدارة وحالة الطاولات (1 إلى 30):</h3>
-      <p style="font-size: 11px; color: #94A3B8; margin-bottom: 14px;">اضغط على أي طاولة لتغيير حالتها فوراً (متاحة 🟢 ➔ مشغولة 🔴 ➔ صيانة 🟡).</p>
-      <div class="tables-control-grid" id="adminTablesGrid"></div>
+      <h4 style="font-size: 14px; margin-bottom: 10px; color: #CBD5E1;">الأطباق المضافة في السحابة:</h4>
+      <div id="cloudProductsList">جاري تحميل البيانات...</div>
     </div>
   </div>
 
-  <script>
-    function switchAdminTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`admin-${tabId}`).classList.add('active');
-      btn.classList.add('active');
-    }
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-    function updateStatus(btn, status) {
-      const card = btn.closest('.order-card');
-      const pill = card.querySelector('.status-pill');
-      if (status === 'cooking') {
-        pill.className = 'status-pill status-cooking';
-        pill.innerText = 'قيد التحضير 🟠';
-      } else if (status === 'ready') {
-        pill.className = 'status-pill status-ready';
-        pill.innerText = 'جاهز للتقديم 🟢';
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSEuSjIN1P6AxgpXts1yDSxHu4bdaf8xs",
+      authDomain: "mazaq-restaurant-40ed3.firebaseapp.com",
+      projectId: "mazaq-restaurant-40ed3",
+      storageBucket: "mazaq-restaurant-40ed3.firebasestorage.app",
+      messagingSenderId: "751899653905",
+      appId: "1:751899653905:web:0aad8440f5d3eb5e633eb0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.saveProductToCloud = async function() {
+      const name = document.getElementById('prodName').value;
+      const price = document.getElementById('prodPrice').value;
+      const img = document.getElementById('prodImg').value;
+      const cat = document.getElementById('prodCat').value;
+
+      if (!name || !price) return alert('يرجى ملء الاسم والسعر!');
+
+      try {
+        await addDoc(collection(db, "menu_items"), {
+          name: name,
+          price: price,
+          img: img || 'https://via.placeholder.com/150',
+          category: cat,
+          createdAt: new Date()
+        });
+        alert('✅ تم حفظ المنتج في السحابة وظهر فوراً للزبائن!');
+        document.getElementById('prodName').value = '';
+        document.getElementById('prodPrice').value = '';
+        document.getElementById('prodImg').value = '';
+        loadCloudProducts();
+      } catch (e) {
+        alert('خطأ في الحفظ: ' + e.message);
       }
-    }
+    };
 
-    function addNewProduct() {
-      const name = document.getElementById('newProdName').value;
-      const price = document.getElementById('newProdPrice').value;
-      if (!name || !price) return alert('يرجى ملء اسم الطبق والسعر على الأقل!');
-
-      alert(`✅ تم إضافة الطبق "${name}" بنجاح مع الصورة وتم ربطه بالمنيو!`);
-      document.getElementById('newProdName').value = '';
-      document.getElementById('newProdPrice').value = '';
-      document.getElementById('newProdImg').value = '';
-    }
-
-    const tGrid = document.getElementById('adminTablesGrid');
-    for (let i = 1; i <= 30; i++) {
-      tGrid.innerHTML += `
-        <div class="table-ctrl-card available" id="ctrl-tbl-${i}" onclick="toggleTableStatus(${i})">
-          <b style="font-size: 14px;">طاولة ${i}</b><br>
-          <span id="status-text-${i}" style="font-size: 11px; color: #22C55E; font-weight: bold;">متاحة 🟢</span>
-        </div>`;
-    }
-
-    function toggleTableStatus(num) {
-      const card = document.getElementById(`ctrl-tbl-${num}`);
-      const text = document.getElementById(`status-text-${num}`);
-      
-      if (card.classList.contains('available')) {
-        card.className = 'table-ctrl-card busy';
-        text.style.color = '#EF4444';
-        text.innerText = 'مشغولة 🔴';
-      } else if (card.classList.contains('busy')) {
-        card.className = 'table-ctrl-card maintenance';
-        text.style.color = '#F59E0B';
-        text.innerText = 'صيانة 🟡';
-      } else {
-        card.className = 'table-ctrl-card available';
-        text.style.color = '#22C55E';
-        text.innerText = 'متاحة 🟢';
+    window.loadCloudProducts = async function() {
+      const listDiv = document.getElementById('cloudProductsList');
+      listDiv.innerHTML = 'جاري التحميل...';
+      const querySnapshot = await getDocs(collection(db, "menu_items"));
+      listDiv.innerHTML = '';
+      if(querySnapshot.empty) {
+        listDiv.innerHTML = '<p style="color:#94A3B8; font-size:12px;">لا توجد أطباق مضافة حتى الآن.</p>';
+        return;
       }
-    }
+      querySnapshot.forEach((docSnapshot) => {
+        const item = docSnapshot.data();
+        listDiv.innerHTML += `
+          <div class="item-card">
+            <div>
+              <b>${item.name}</b> - ${item.price} د.ع <br>
+              <small style="color: #94A3B8;">القسم: ${item.category}</small>
+            </div>
+            <button class="btn-delete-item" onclick="deleteProductFromCloud('${docSnapshot.id}')">حذف 🗑️</button>
+          </div>
+        `;
+      });
+    };
+
+    window.deleteProductFromCloud = async function(id) {
+      if(confirm('هل انت متاكد من حذف هذا الطبق نهائياً؟')) {
+        await deleteDoc(doc(db, "menu_items", id));
+        loadCloudProducts();
+      }
+    };
+
+    loadCloudProducts();
   </script>
 </body>
 </html>
